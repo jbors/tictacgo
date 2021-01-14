@@ -1,2 +1,2 @@
 # tictacgo
-Small tic-tac-toe webserver to explore some concepts
+Small tic-tac-toe application to explore some concepts
