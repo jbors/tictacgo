@@ -125,22 +125,29 @@ func (b Board) PlayRandomMove() Board {
 }
 
 //TODO Both Negamax and alphabeta pruning could improve on this
+//Also, theoretical draws with a winning move possible are better than theoretical draws without
 
 //PlayMiniMaxMove lets the computer play a move
 func (b Board) PlayMiniMaxMove() Board {
 	moves := b.generatePossibleMoves()
 	topMoveValue := 2
-	var selectedMove int
+	var selectedMoves []int
 	for _, move := range moves {
 		moveVal := miniMax(b.PlayMove(move, OPlayer), XPlayer, true)
-		// fmt.Printf("MoveVal: %v\n", moveVal)
 		if moveVal < topMoveValue {
 			topMoveValue = moveVal
-			selectedMove = move
+			selectedMoves = nil
+			selectedMoves = append(selectedMoves, move)
+		} else if moveVal == topMoveValue {
+			selectedMoves = append(selectedMoves, move)
 		}
 	}
+	fmt.Printf("Selected moves: %v", selectedMoves)
 
-	b.Cells[selectedMove] = O
+	//Pick a random candidate from the 'best' moves so we do not play
+	//the same move every time
+	index := rand.Intn(len(selectedMoves))
+	b.Cells[selectedMoves[index]] = O
 	return b
 }
 
