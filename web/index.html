@@ -1,37 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <!-- Can you tell it's been years since I touched the frontend? -->
     <script
       src="https://code.jquery.com/jquery-3.5.1.min.js"
       integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
       crossorigin="anonymous"
     ></script>
-    <!-- Style and scripts can move to own file-->
-    <style>
-      td {
-        border: 1px solid black;
-        height: 50px;
-        width: 50px;
-      }
-    </style>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+      integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="style.css" />
     <script>
       $(document).ready(function () {
-        //FIXME: This leaves all cells clickable
-        $(".empty").click(function () {
-          console.log(this.id);
-          $(this).find("p").text("X");
+        $("#main div").click(function () {
+          if ($(this).html() !== "X" && $(this).html !== "O") {
+            $(this).html("X");
+          }
           readAndPost();
+        });
+
+        $("#replay").click(function () {
+          $("#main div").each(function () {
+            $(this).html("");
+          });
         });
       });
 
       function readAndPost() {
         //loop over divs and post board position to the backend
         pos = '{"State":"';
-        $("td > p").each(function () {
+        $("#main div").each(function () {
           line = "-";
-          if ($(this).text() !== undefined && $(this).text() !== "") {
-            line = $(this).text();
+          if ($(this).html() !== undefined && $(this).html() !== "") {
+            line = $(this).html();
           }
 
           pos += line;
@@ -44,11 +58,11 @@
           console.log(data);
           json = JSON.parse(data);
 
-          $("td > p").each(function (index) {
+          $("#main div").each(function (index) {
             //console.log(json.State[index])
             cellState = json.State[index];
             if (cellState !== "-") {
-              $(this).text(cellState);
+              $(this).html(cellState);
             }
           });
           console.log(json.Result);
@@ -61,22 +75,20 @@
     <link rel="manifest" href="/site.webmanifest" />
   </head>
   <body>
-    <table>
-      <tr>
-        <td id="1" class="empty"><p></p></td>
-        <td id="2" class="empty"><p></p></td>
-        <td id="3" class="empty"><p></p></td>
-      </tr>
-      <tr>
-        <td id="4" class="empty"><p></p></td>
-        <td id="5" class="empty"><p></p></td>
-        <td id="6" class="empty"><p></p></td>
-      </tr>
-      <tr>
-        <td id="7" class="empty"><p></p></td>
-        <td id="8" class="empty"><p></p></td>
-        <td id="9" class="empty"><p></p></td>
-      </tr>
-    </table>
+    <div class="container" id="main">
+      <span id="turn">Tic Tac Go</span>
+
+      <div class="box" style="border-left: 0; border-top: 0" id="box1"></div>
+      <div class="box" style="border-top: 0" id="box2"></div>
+      <div class="box" style="border-top: 0; border-right: 0" id="box3"></div>
+      <div class="box" style="border-left: 0" id="box4"></div>
+      <div class="box" id="box5"></div>
+      <div class="box" style="border-right: 0" id="box6"></div>
+      <div class="box" style="border-left: 0; border-bottom: 0" id="box7"></div>
+      <div class="box" style="border-bottom: 0" id="box8"></div>
+      <div class="box" style="border-right: 0; border-bottom: 0" id="box9"></div>
+    </div>
+
+    <button class="btn btn-rounded" id="replay">Play Again</button>
   </body>
 </html>
