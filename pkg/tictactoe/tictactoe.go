@@ -1,4 +1,5 @@
 // Package tictactoe defines the concepts we need to represent a game
+// and defines some algorithms to make the computer play
 // Adapted from https://github.com/shurcooL/tictactoe
 package tictactoe
 
@@ -18,11 +19,22 @@ const (
 	O              // Cell with an O mark.
 )
 
+// Player X or O player
+type Player uint8
+
+// Players
+const (
+	XPlayer Player = iota // Human plays the Xs
+	OPlayer               // Computer plays the Os
+)
+
 //Board representation
 type Board struct {
 	// Cells is a 3x3 matrix in row major order.
 	// Cells[3*r + c] is the cell in the r'th row and c'th column.
 	Cells [9]State
+	//Should this have something to indicate whos turn it is??
+	//NextMove Player
 }
 
 // Condition of the board configuration.
@@ -82,13 +94,101 @@ func (b Board) EvalBoard() Condition {
 	}
 }
 
-//PlayRandomMove lets the computer play a move
+func (p Player) opponent() Player {
+	switch p {
+	case XPlayer:
+		return OPlayer
+	case OPlayer:
+		return XPlayer
+	default:
+		panic("Unknown player")
+	}
+}
+
+//PlayMove writes to the board stae on the selected position
+func (b Board) PlayMove(move int, p Player) Board {
+	switch p {
+	case XPlayer:
+		b.Cells[move] = X
+	case OPlayer:
+		b.Cells[move] = O
+	}
+	return b
+}
+
+//PlayRandomMove lets the computer play a random move
 func (b Board) PlayRandomMove() Board {
-	//Play random move
 	moves := b.generatePossibleMoves()
 	index := rand.Intn(len(moves))
 	b.Cells[moves[index]] = O
 	return b
+}
+
+//TODO Both Negamax and alphabeta pruning could improve on this
+
+//PlayMiniMaxMove lets the computer play a move
+func (b Board) PlayMiniMaxMove() Board {
+	moves := b.generatePossibleMoves()
+	topMoveValue := 2
+	var selectedMove int
+	for _, move := range moves {
+		moveVal := miniMax(b.PlayMove(move, OPlayer), XPlayer, true)
+		// fmt.Printf("MoveVal: %v\n", moveVal)
+		if moveVal < topMoveValue {
+			topMoveValue = moveVal
+			selectedMove = move
+		}
+	}
+
+	b.Cells[selectedMove] = O
+	return b
+}
+
+func miniMax(b Board, p Player, maximizingPlayer bool) int {
+	switch b.EvalBoard() {
+	case XWon:
+		return 1
+	case OWon:
+		return -1
+	case Tie:
+		return 0
+	case NotEnd:
+		if maximizingPlayer {
+			value := -2
+			moves := b.generatePossibleMoves()
+			for _, m := range moves {
+				minimaxVal := miniMax(b.PlayMove(m, p), p.opponent(), false)
+				value = Max(value, minimaxVal)
+			}
+			return value
+		} else {
+			value := 2
+			moves := b.generatePossibleMoves()
+			for _, m := range moves {
+				minimaxVal := miniMax(b.PlayMove(m, p), p.opponent(), true)
+				value = Min(value, minimaxVal)
+			}
+			return value
+		}
+	default:
+		panic("Impossible board")
+	}
+}
+
+// Max I have absolutely no idea why this would not just be part of the standard library
+func Max(x, y int) int {
+	if x > y {
+		return x
+	}
+	return y
+}
+
+// Min I have absolutely no idea why this would not just be part of the standard library
+func Min(x, y int) int {
+	if x < y {
+		return x
+	}
+	return y
 }
 
 func (b Board) generatePossibleMoves() []int {
@@ -113,8 +213,6 @@ func (b Board) String() string {
 			sb.WriteRune('-')
 		}
 	}
-	//TODO: remove
-	fmt.Printf("%v \n", sb.String())
 	return sb.String()
 }
 
@@ -130,9 +228,6 @@ func (c Condition) String() string {
 	default:
 		sb.WriteString("NotEnd")
 	}
-
-	//TODO: remove
-	fmt.Printf("%v \n", sb.String())
 	return sb.String()
 }
 

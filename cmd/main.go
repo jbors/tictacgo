@@ -33,14 +33,18 @@ func handleRestRequest(writer http.ResponseWriter, request *http.Request) {
 
 	board := ttt.MakeBoard(state.State)
 
-	board = board.PlayRandomMove()
+	//Only play if the game is not over
+	if board.EvalBoard() == ttt.NotEnd {
+		//board = board.PlayRandomMove()
+		board = board.PlayMiniMaxMove()
+	}
 
 	var result jsonState
 
 	result.State = board.String()
 	result.Result = board.EvalBoard().String()
 
-	//This just gives back the state but we should add a move first
+	//Give back the new state
 	encoder := json.NewEncoder(writer)
 	encoder.Encode(result)
 }

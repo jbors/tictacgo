@@ -17,6 +17,7 @@
     </style>
     <script>
       $(document).ready(function () {
+        //FIXME: This leaves all cells clickable
         $(".empty").click(function () {
           console.log(this.id);
           $(this).find("p").text("X");
