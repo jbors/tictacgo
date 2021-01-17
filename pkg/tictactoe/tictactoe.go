@@ -31,7 +31,7 @@ type Board struct {
 	// Cells is a 3x3 matrix in row major order.
 	// Cells[3*r + c] is the cell in the r'th row and c'th column.
 	Cells [9]State
-	//Should this have something to indicate whos turn it is??
+	//TODO: Should this have something to indicate whos turn it is??
 	//NextMove Player
 }
 
