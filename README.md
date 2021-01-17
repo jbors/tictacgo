@@ -11,6 +11,7 @@ This is the first thing I wrote in Go after taking a coursera course on it so I'
 3. Go to the root directory of the project
 4. `go run ./cmd/` will start the program and expose the game at `localhost:8080`
 
+![Start board](/assets/startboard70.png)
 ![Game board](/assets/board70.png)
 
 ## TODO
