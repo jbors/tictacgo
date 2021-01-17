@@ -1,6 +1,10 @@
 $(document).ready(function () {
   $("#main div").click(function () {
-    if ($(this).html() !== "X" && $(this).html() !== "O" && $("#result").html() === "") {
+    if (
+      $(this).html() !== "X" &&
+      $(this).html() !== "O" &&
+      $("#result").html() === ""
+    ) {
       $(this).html("X");
       readAndPost();
     }
@@ -9,7 +13,7 @@ $(document).ready(function () {
   $("#replay").click(function () {
     $("#main div").each(function () {
       $(this).html("");
-      $(this).removeClass("win")
+      $(this).removeClass("win");
     });
     $("#result").html("");
   });
@@ -123,7 +127,7 @@ function readAndPost() {
       selectWinnerBoxes(box3, box5, box7);
   }
 
-  function selectWinnerBoxes(b1, b2, b3){
+  function selectWinnerBoxes(b1, b2, b3) {
     b1.addClass("win");
     b2.addClass("win");
     b3.addClass("win");
