@@ -1,15 +1,16 @@
 $(document).ready(function () {
   $("#main div").click(function () {
-    if ($(this).html() !== "X" && $(this).html !== "O") {
+    if ($(this).html() !== "X" && $(this).html() !== "O") {
       $(this).html("X");
+      readAndPost();
     }
-    readAndPost();
   });
 
   $("#replay").click(function () {
     $("#main div").each(function () {
       $(this).html("");
     });
+    $("#result").html("")
   });
 });
 
@@ -29,15 +30,24 @@ function readAndPost() {
   console.log(pos);
 
   $.post("/api/", pos, function (data) {
-    console.log(data);
-    json = JSON.parse(data);
+    jsonData = JSON.parse(data);
 
     $("#main div").each(function (index) {
-      cellState = json.State[index];
+      cellState = jsonData.State[index];
       if (cellState !== "-") {
         $(this).html(cellState);
       }
     });
-    console.log(json.Result);
+    if(jsonData.Result !== "NotEnd"){
+        if(jsonData.Result === "XWon"){
+            $("#result").html("Player X won!")
+        }
+        if(jsonData.Result === "OWon"){
+            $("#result").html("Player O won!")
+        }
+        if(jsonData.Result === "Tie"){
+            $("#result").html("Tie!")
+        }    
+    }
   });
 }
