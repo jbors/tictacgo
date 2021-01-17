@@ -12,6 +12,7 @@ import (
 type jsonState struct {
 	State  string
 	Result string
+	Player string
 }
 
 func main() {
@@ -35,8 +36,12 @@ func handleRestRequest(writer http.ResponseWriter, request *http.Request) {
 
 	//Only play if the game is not over
 	if board.EvalBoard() == ttt.NotEnd {
-		//board = board.PlayRandomMove()
-		board = board.PlayMiniMaxMove()
+		switch state.Player {
+		case "minimax":
+			board = board.PlayMiniMaxMove()
+		default:
+			board = board.PlayRandomMove()
+		}
 	}
 
 	var result jsonState

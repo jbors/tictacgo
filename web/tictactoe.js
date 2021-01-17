@@ -25,6 +25,8 @@ function readAndPost() {
 
     pos += line;
   });
+  pos += '", "Player":"'
+  pos += $('input[name="player"]:checked').val(); 
   pos += '"}';
 
   console.log(pos);
