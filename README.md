@@ -16,6 +16,4 @@ This is the first thing I wrote in Go after taking a coursera course on it so I'
 - Algorithm improvements: alfabeta pruning, negamax
 - Don't play for a tie when a win is still possible
 - Play around with parallel execution
-- Display the winning row
-- Prevent clicks after a player has won
 - Write some tests

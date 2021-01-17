@@ -1,6 +1,6 @@
 $(document).ready(function () {
   $("#main div").click(function () {
-    if ($(this).html() !== "X" && $(this).html() !== "O") {
+    if ($(this).html() !== "X" && $(this).html() !== "O" && $("#result").html() === "") {
       $(this).html("X");
       readAndPost();
     }
