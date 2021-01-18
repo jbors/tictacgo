@@ -19,5 +19,4 @@ This is the first thing I wrote in Go after taking a coursera course on it so I'
 - Allow user to choose whether he's X or O
 - Algorithm improvements: alfabeta pruning, negamax
 - Don't play for a tie when a win is still possible
-- Play around with parallelism
 - Write some more tests
