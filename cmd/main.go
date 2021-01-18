@@ -37,6 +37,8 @@ func handleRestRequest(writer http.ResponseWriter, request *http.Request) {
 	//Only play if the game is not over
 	if board.EvalBoard() == ttt.NotEnd {
 		switch state.Player {
+		case "parallel":
+			board = board.PlayParallelMinimaxMove()
 		case "minimax":
 			board = board.PlayMiniMaxMove()
 		default:

@@ -2,9 +2,12 @@
 package tictactoe
 
 import (
-	"fmt"
 	"math/rand"
+	"sync"
 )
+
+//WaitGroup to organize parallelism
+var wg sync.WaitGroup
 
 func (p Player) opponent() Player {
 	switch p {
@@ -43,13 +46,46 @@ func (b Board) PlayMiniMaxMove() Board {
 			selectedMoves = append(selectedMoves, move)
 		}
 	}
-	fmt.Printf("Selected moves: %v", selectedMoves)
 
 	//Pick a random candidate from the 'best' moves so we do not play
 	//the same move every time
 	index := rand.Intn(len(selectedMoves))
 	b.Cells[selectedMoves[index]] = O
 	return b
+}
+
+//PlayParallelMinimaxMove does the same evaluation as minimax, just with goroutines
+func (b Board) PlayParallelMinimaxMove() Board {
+	moves := b.generatePossibleMoves()
+	results := make([]int, len(moves))
+	for i, move := range moves {
+		wg.Add(1)
+		go evalTopMove(b.PlayMove(move, OPlayer), XPlayer, true, &results[i])
+	}
+	wg.Wait()
+
+	topMoveValue := 2
+	var selectedMoves []int
+	for i, moveVal := range results {
+		if moveVal < topMoveValue {
+			topMoveValue = moveVal
+			selectedMoves = nil
+			selectedMoves = append(selectedMoves, moves[i])
+		} else if moveVal == topMoveValue {
+			selectedMoves = append(selectedMoves, moves[i])
+		}
+	}
+
+	//Pick a random candidate from the 'best' moves so we do not play
+	//the same move every time
+	index := rand.Intn(len(selectedMoves))
+	b.Cells[selectedMoves[index]] = O
+	return b
+}
+
+func evalTopMove(b Board, p Player, maximizingPlayer bool, result *int) {
+	defer wg.Done()
+	*result = miniMax(b, p, maximizingPlayer)
 }
 
 func miniMax(b Board, p Player, maximizingPlayer bool) int {
