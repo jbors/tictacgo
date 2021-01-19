@@ -57,3 +57,21 @@ func TestMinimaxAvoidDirectLoss(t *testing.T) {
 		t.Errorf("Minimax failed to prevent winning move %v", bS)
 	}
 }
+
+func TestMinimaxAvoidLoss(t *testing.T) {
+	//If X plays in the corner all moves except the center are losing
+	b1 := MakeBoard("X--------")
+	bS := b1.PlayMiniMaxMove().String()
+	if bS != "X---O----" {
+		t.Errorf("Minimax failed to pick the right move %v", bS)
+	}
+}
+
+func TestParallelMinimaxAvoidLoss(t *testing.T) {
+	//If X plays in the corner all moves except the center are losing
+	b1 := MakeBoard("X--------")
+	bS := b1.PlayParallelMinimaxMove().String()
+	if bS != "X---O----" {
+		t.Errorf("Minimax failed to pick the right move %v", bS)
+	}
+}

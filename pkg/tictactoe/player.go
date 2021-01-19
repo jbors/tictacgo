@@ -55,7 +55,7 @@ func (b Board) PlayMiniMaxMove() Board {
 	index := rand.Intn(len(selectedMoves))
 	b.Cells[selectedMoves[index]] = O
 	end := time.Now()
-	fmt.Printf("Completed minimax move in %v ms\n", end.Sub(start))
+	fmt.Printf("Completed minimax move in %v\n", end.Sub(start))
 	return b
 }
 
@@ -87,7 +87,7 @@ func (b Board) PlayParallelMinimaxMove() Board {
 	index := rand.Intn(len(selectedMoves))
 	b.Cells[selectedMoves[index]] = O
 	end := time.Now()
-	fmt.Printf("Completed parallel minimax move in %v ms\n", end.Sub(start))
+	fmt.Printf("Completed parallel minimax move in %v\n", end.Sub(start))
 	return b
 }
 
