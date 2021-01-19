@@ -66,7 +66,7 @@ func (b Board) PlayParallelMinimaxMove() Board {
 	results := make([]int, len(moves))
 	for i, move := range moves {
 		wg.Add(1)
-		go evalTopMove(b.PlayMove(move, OPlayer), XPlayer, true, &results[i])
+		go evalTopLevelMove(b.PlayMove(move, OPlayer), XPlayer, true, &results[i])
 	}
 	wg.Wait()
 
@@ -91,7 +91,7 @@ func (b Board) PlayParallelMinimaxMove() Board {
 	return b
 }
 
-func evalTopMove(b Board, p Player, maximizingPlayer bool, result *int) {
+func evalTopLevelMove(b Board, p Player, maximizingPlayer bool, result *int) {
 	defer wg.Done()
 	*result = miniMax(b, p, maximizingPlayer)
 }

@@ -9,31 +9,31 @@ import (
 func TestBoardEval(t *testing.T) {
 	b1 := MakeBoard("X-O-X-O-X")
 	if b1.EvalBoard() != XWon {
-		fail(t, b1)
+		failBoardEval(t, b1)
 	}
 
 	b2 := MakeBoard("XXX---O-O")
 	if b2.EvalBoard() != XWon {
-		fail(t, b2)
+		failBoardEval(t, b2)
 	}
 
 	b3 := MakeBoard("X-X---O-O")
 	if b3.EvalBoard() != NotEnd {
-		fail(t, b3)
+		failBoardEval(t, b3)
 	}
 
 	b4 := MakeBoard("XOXOXXOXO")
 	if b4.EvalBoard() != Tie {
-		fail(t, b4)
+		failBoardEval(t, b4)
 	}
 
 	b5 := MakeBoard("XOXXO--OO")
 	if b5.EvalBoard() != OWon {
-		fail(t, b5)
+		failBoardEval(t, b5)
 	}
 }
 
-func fail(t *testing.T, b Board) {
+func failBoardEval(t *testing.T, b Board) {
 	t.Errorf("Board %v does not have the expected evaluation, actual valuation is %v", b.String(), b.EvalBoard())
 }
 
@@ -74,4 +74,23 @@ func TestParallelMinimaxAvoidLoss(t *testing.T) {
 	if bS != "X---O----" {
 		t.Errorf("Minimax failed to pick the right move %v", bS)
 	}
+}
+
+func TestMinimaxEvaluation(t *testing.T) {
+	b1 := MakeBoard("----X---O")
+	v1 := miniMax(b1, XPlayer, true)
+	if v1 != 0 {
+		failMinimaxEval(t, b1)
+	}
+
+	b2 := MakeBoard("----X--O-")
+	v2 := miniMax(b2, XPlayer, true)
+	if v2 != 1 {
+		failMinimaxEval(t, b2)
+	}
+
+}
+
+func failMinimaxEval(t *testing.T, b Board) {
+	t.Errorf("Minimax did not return the correct evaluation for %v", b.String())
 }
