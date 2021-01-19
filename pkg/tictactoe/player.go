@@ -2,8 +2,10 @@
 package tictactoe
 
 import (
+	"fmt"
 	"math/rand"
 	"sync"
+	"time"
 )
 
 //WaitGroup to organize parallelism
@@ -33,6 +35,7 @@ func (b Board) PlayRandomMove() Board {
 
 //PlayMiniMaxMove lets the computer play a move
 func (b Board) PlayMiniMaxMove() Board {
+	start := time.Now()
 	moves := b.generatePossibleMoves()
 	topMoveValue := 2
 	var selectedMoves []int
@@ -51,11 +54,14 @@ func (b Board) PlayMiniMaxMove() Board {
 	//the same move every time
 	index := rand.Intn(len(selectedMoves))
 	b.Cells[selectedMoves[index]] = O
+	end := time.Now()
+	fmt.Printf("Completed minimax move in %v ms\n", end.Sub(start))
 	return b
 }
 
 //PlayParallelMinimaxMove does the same evaluation as minimax, just with goroutines
 func (b Board) PlayParallelMinimaxMove() Board {
+	start := time.Now()
 	moves := b.generatePossibleMoves()
 	results := make([]int, len(moves))
 	for i, move := range moves {
@@ -80,6 +86,8 @@ func (b Board) PlayParallelMinimaxMove() Board {
 	//the same move every time
 	index := rand.Intn(len(selectedMoves))
 	b.Cells[selectedMoves[index]] = O
+	end := time.Now()
+	fmt.Printf("Completed parallel minimax move in %v ms\n", end.Sub(start))
 	return b
 }
 
